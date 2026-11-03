@@ -140,7 +140,7 @@
   var closeLb = function () {
     lb.classList.remove('is-on');
     document.documentElement.classList.remove('is-locked');
-    setTimeout(function () { lb.hidden = true; lbImg.src = ''; }, 420);
+    setTimeout(function () { lb.hidden = true; lbImg.removeAttribute('src'); }, 420);
   };
 
   shots.forEach(function (btn, i) {
