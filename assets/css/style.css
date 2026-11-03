@@ -290,7 +290,10 @@ main, .ft{ position:relative; z-index:2; }
   font-family:var(--disp); font-weight:400; margin:0 0 .34em;
   font-size:clamp(4.4rem,13.5vw,10.5rem); line-height:.85; letter-spacing:-.04em;
 }
-.rv-l{ display:block; overflow:hidden; }
+/* La máscara del reveal recorta con overflow:hidden, pero con line-height .85
+   la caja es más baja que los glifos de la Bodoni y les cortaba las puntas.
+   El padding agranda el recorte y el margen negativo deja la maquetación igual. */
+.rv-l{ display:block; overflow:hidden; padding-block:.2em; margin-block:-.2em; }
 .rv-l > span, .rv-l > em{ display:block; }
 .hero__t em{
   font-style:italic; padding-left:.36em;
@@ -709,7 +712,8 @@ main, .ft{ position:relative; z-index:2; }
 
 .rv{ opacity:0; transform:translateY(26px); }
 .rv.in{ opacity:1; transform:none; transition:opacity 1s var(--e), transform 1s var(--e); }
-.rv-l > span, .rv-l > em{ transform:translateY(105%); }
+/* 135% y no 105%: tiene que salir también del padding de la máscara */
+.rv-l > span, .rv-l > em{ transform:translateY(135%); }
 .rv-l.in > span, .rv-l.in > em{ transform:none; transition:transform 1.15s var(--e); }
 
 @media (prefers-reduced-motion:reduce){
