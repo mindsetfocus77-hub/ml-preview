@@ -19,13 +19,17 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@missLith_domina">
 
-<meta name="theme-color" content="#0B0A0C">
+<meta name="theme-color" content="#1A0810">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js" } }
+</script>
 
 <script type="application/ld+json">
 {
@@ -46,45 +50,54 @@
 
 <body>
 
-<!-- ───────────────────────── VERIFICACIÓN DE EDAD ───────────────────────── -->
-<div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="ag-title">
-  <div class="agegate__panel">
-    <span class="agegate__mark">XVIII</span>
-    <h1 class="agegate__title" id="ag-title">Miss Lith</h1>
-    <p class="agegate__rule"></p>
-    <p class="agegate__text">
+<!-- seda: shader de fondo, detrás de todo -->
+<canvas id="silk" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+
+<div class="progress" id="progress" aria-hidden="true"><span></span></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span></div>
+
+
+<!-- ───────────────────────── UMBRAL (18+) ───────────────────────── -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-t">
+  <div class="gate__in">
+    <span class="gate__kicker">Valencia · España</span>
+    <h1 class="gate__name" id="gate-t"><span>Miss</span><em>Lith</em></h1>
+    <span class="gate__rule"></span>
+    <p class="gate__txt">
       Este sitio contiene material explícito destinado exclusivamente a personas adultas.
-      Al entrar declaras ser mayor de 18 años y acceder por voluntad propia.
+      Al entrar declaras ser mayor de 18&nbsp;años y acceder por voluntad propia.
     </p>
-    <div class="agegate__actions">
-      <button class="btn btn--gold" id="ag-yes" type="button">Soy mayor de 18 años</button>
-      <a class="btn btn--ghost" href="https://www.google.com" rel="noopener">Salir</a>
+    <div class="gate__act">
+      <button class="btn btn--fill" id="gate-yes" type="button"><span>Entrar</span></button>
+      <a class="btn btn--line" href="https://www.google.com" rel="noopener"><span>Salir</span></a>
     </div>
+    <span class="gate__load" id="gate-load">Preparando la sala…</span>
   </div>
 </div>
 
 
-<!-- ───────────────────────────── CABECERA ───────────────────────────── -->
+<!-- ───────────────────────────── CABECERA ───────────────────────── -->
 <header class="hdr" id="hdr">
   <div class="hdr__in">
-    <a class="brand" href="#top" aria-label="Miss Lith, inicio">
-      <span class="brand__name">Miss Lith</span>
-      <span class="brand__sub">Valencia</span>
+    <a class="brand" href="#top" data-c>
+      <span class="brand__n">Miss Lith</span>
+      <span class="brand__s">Domina · Valencia</span>
     </a>
 
     <nav class="nav" id="nav" aria-label="Principal">
-      <a href="#sobre">Sobre mí</a>
-      <a href="#practicas">Prácticas</a>
-      <a href="#sesiones">Sesiones</a>
-      <a href="#galeria">Galería</a>
-      <a href="#protocolo">Protocolo</a>
-      <a href="#contacto">Contacto</a>
+      <a href="#sobre" data-c><i>01</i>Sobre mí</a>
+      <a href="#practicas" data-c><i>02</i>Prácticas</a>
+      <a href="#sesiones" data-c><i>03</i>Sesiones</a>
+      <a href="#galeria" data-c><i>04</i>Galería</a>
+      <a href="#protocolo" data-c><i>05</i>Protocolo</a>
+      <a href="#contacto" data-c><i>06</i>Contacto</a>
     </nav>
 
-    <a class="btn btn--sm btn--gold hdr__cta" href="#contacto">Solicitar sesión</a>
+    <a class="btn btn--fill btn--sm hdr__cta" href="#contacto" data-c><span>Reservar</span></a>
 
     <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">
-      <span></span><span></span><span></span>
+      <span></span><span></span>
     </button>
   </div>
 </header>
@@ -94,290 +107,302 @@
 
 <!-- ───────────────────────────── HERO ───────────────────────────── -->
 <section class="hero">
-  <div class="hero__glow" aria-hidden="true"></div>
-
   <div class="hero__in">
-    <div class="hero__copy">
-      <p class="eyebrow reveal">
-        <span class="dot"></span> Perfil verificado · Presencial &amp; online
-      </p>
 
-      <h1 class="hero__title reveal">
-        <span class="l1">Miss</span>
-        <span class="l2">Lith</span>
+    <div class="hero__copy">
+      <p class="kick rv"><span class="kick__d"></span>Perfil verificado · Presencial &amp; online</p>
+
+      <h1 class="hero__t">
+        <span class="rv-l"><span>Miss</span></span>
+        <span class="rv-l"><em>Lith</em></span>
       </h1>
 
-      <p class="hero__tag reveal">Reina del <em>pegging</em><br>y gran fetichista de pies</p>
+      <p class="hero__tag rv">Reina del <em>pegging</em> y gran fetichista de pies</p>
 
-      <p class="hero__lede reveal">
+      <p class="hero__lede rv">
         Más de diez años en el femdom, siete de ellos a nivel profesional.
-        Sesiones en Valencia que no siguen ningún patrón establecido.
+        Cada sesión se construye desde cero: no sigo ningún patrón establecido.
       </p>
 
-      <div class="hero__cta reveal">
-        <a class="btn btn--gold" href="#contacto">Solicitar sesión</a>
-        <a class="btn btn--ghost" href="#practicas">Ver prácticas</a>
+      <div class="hero__cta rv">
+        <a class="btn btn--fill" href="#contacto" data-c><span>Solicitar sesión</span></a>
+        <a class="btn btn--line" href="#practicas" data-c><span>Ver prácticas</span></a>
       </div>
 
-      <ul class="hero__meta reveal">
-        <li><strong>Valencia</strong><span>Ciudad base</span></li>
-        <li><strong>+10 años</strong><span>En el femdom</span></li>
-        <li><strong>4 países</strong><span>Colaboraciones</span></li>
+      <ul class="hero__m rv">
+        <li><b>26</b><span>Años</span></li>
+        <li><b>+10</b><span>En el femdom</span></li>
+        <li><b>4</b><span>Países</span></li>
+        <li><b>30</b><span>Prácticas</span></li>
       </ul>
     </div>
 
-    <figure class="hero__figure reveal">
-      <div class="hero__frame"></div>
-      <img src="assets/img/lith-02.jpg" alt="Miss Lith, domina profesional en Valencia" width="1334" height="2000" fetchpriority="high">
-      <figcaption>Valencia · ES</figcaption>
+    <figure class="hero__fig rv" id="tilt">
+      <div class="hero__arch">
+        <img src="assets/img/lith-02.jpg" alt="Miss Lith, domina profesional en Valencia" width="1334" height="2000" fetchpriority="high">
+      </div>
+      <figcaption><span>Valencia</span><span>ES · 2026</span></figcaption>
     </figure>
+
   </div>
 
-  <a class="scrollcue" href="#marquee" aria-label="Bajar">
-    <span class="scrollcue__line"></span>
-  </a>
+  <a class="cue" href="#sobre" aria-label="Bajar"><span></span></a>
 </section>
 
 
-<!-- ───────────────────────────── MARQUESINA ───────────────────────────── -->
-<div class="marquee" id="marquee" aria-hidden="true">
-  <div class="marquee__track">
-    <span>Pegging</span><i>✦</i><span>Foot fetish</span><i>✦</i><span>Strapon</span><i>✦</i>
-    <span>Trampling</span><i>✦</i><span>Látex</span><i>✦</i><span>CBT</span><i>✦</i>
-    <span>Face-sitting</span><i>✦</i><span>Disciplina Inglesa</span><i>✦</i><span>Feminización</span><i>✦</i>
-    <span>Ataduras</span><i>✦</i><span>Humillación</span><i>✦</i><span>Findom</span><i>✦</i>
-    <span>Pegging</span><i>✦</i><span>Foot fetish</span><i>✦</i><span>Strapon</span><i>✦</i>
-    <span>Trampling</span><i>✦</i><span>Látex</span><i>✦</i><span>CBT</span><i>✦</i>
-    <span>Face-sitting</span><i>✦</i><span>Disciplina Inglesa</span><i>✦</i><span>Feminización</span><i>✦</i>
-    <span>Ataduras</span><i>✦</i><span>Humillación</span><i>✦</i><span>Findom</span><i>✦</i>
+<!-- ───────────────────────────── CINTA ──────────────────────────── -->
+<div class="tape" aria-hidden="true">
+  <div class="tape__t">
+    <span>Pegging</span><i></i><span>Foot fetish</span><i></i><span>Strapon</span><i></i>
+    <span>Trampling</span><i></i><span>Látex</span><i></i><span>CBT</span><i></i>
+    <span>Face-sitting</span><i></i><span>Disciplina Inglesa</span><i></i><span>Feminización</span><i></i>
+    <span>Ataduras</span><i></i><span>Humillación</span><i></i><span>Findom</span><i></i>
+    <span>Pegging</span><i></i><span>Foot fetish</span><i></i><span>Strapon</span><i></i>
+    <span>Trampling</span><i></i><span>Látex</span><i></i><span>CBT</span><i></i>
+    <span>Face-sitting</span><i></i><span>Disciplina Inglesa</span><i></i><span>Feminización</span><i></i>
+    <span>Ataduras</span><i></i><span>Humillación</span><i></i><span>Findom</span><i></i>
   </div>
 </div>
 
 
-<!-- ───────────────────────────── SOBRE MÍ ───────────────────────────── -->
-<section class="sec sec--about" id="sobre">
-  <div class="wrap about">
-    <div class="about__media reveal">
-      <img src="assets/img/lith-01.jpg" alt="Miss Lith" width="1333" height="2000" loading="lazy">
-      <div class="about__badge">
-        <span>26</span>
-        <small>años</small>
-      </div>
+<!-- ───────────────────────────── SOBRE MÍ ───────────────────────── -->
+<section class="s" id="sobre">
+  <div class="w about">
+
+    <div class="about__l">
+      <p class="kick rv"><span class="kick__d"></span>Sobre mí</p>
+      <h2 class="t2 rv">No sigo un<br><em>patrón</em></h2>
+
+      <figure class="about__ph rv">
+        <img src="assets/img/lith-01.jpg" alt="Miss Lith" width="1333" height="2000" loading="lazy">
+      </figure>
     </div>
 
-    <div class="about__body">
-      <p class="eyebrow reveal"><span class="dot"></span> Sobre mí</p>
-      <h2 class="h2 reveal">No sigo un patrón<br>establecido</h2>
+    <div class="about__r">
+      <p class="lead rv">
+        Soy Miss Lith, domina profesional en Valencia. Amante del anal masculino
+        y gran fetichista de pies.
+      </p>
 
-      <div class="prose reveal">
-        <p class="prose__lead">
-          Soy Miss Lith, domina profesional en Valencia. Amante del anal masculino
-          y gran fetichista de pies.
-        </p>
+      <div class="body rv">
         <p>
           Llevo más de diez años dentro del femdom a nivel personal y siete ejerciendo
           profesionalmente. Soy conocida por la comunidad femdom en España e internacionalmente,
-          con colaboraciones en <strong>Grecia, Inglaterra, Israel y Estados Unidos</strong>.
+          con colaboraciones en <b>Grecia, Inglaterra, Israel y Estados Unidos</b>.
         </p>
         <p>
-          Aunque soy experta en <strong>pegging</strong> —juego anal con hombres heterosexuales—
-          realizo todo tipo de sesiones: desde los fetichismos más simples hasta las escenografías
-          más elaboradas y las prácticas más duras.
+          Aunque soy experta en <b>pegging</b> —juego anal con hombres heterosexuales—
+          realizo todo tipo de sesiones: desde los fetichismos más simples hasta las
+          escenografías más elaboradas y las prácticas más duras.
         </p>
         <p>
-          Gracias a mis estudios en <strong>psicología clínica</strong> soy capaz de llevarte al límite
-          conociendo el origen y la motivación real de tus fetiches. Cada sesión conmigo es una
-          experiencia nueva y completamente distinta.
+          Gracias a mis estudios en <b>psicología clínica</b> soy capaz de llevarte al límite
+          conociendo el origen y la motivación real de tus fetiches. Cada sesión conmigo
+          es una experiencia nueva y completamente distinta.
         </p>
       </div>
 
-      <ul class="stats reveal">
-        <li><strong>+10</strong><span>Años en el femdom</span></li>
-        <li><strong>7</strong><span>Años profesional</span></li>
-        <li><strong>30</strong><span>Prácticas</span></li>
-        <li><strong>4</strong><span>Países</span></li>
+      <ul class="facts rv">
+        <li><b>7</b><span>Años como profesional</span></li>
+        <li><b>4</b><span>Países con colaboraciones</span></li>
+        <li><b>30</b><span>Prácticas en repertorio</span></li>
+        <li><b>2</b><span>Formatos: presencial y online</span></li>
       </ul>
     </div>
+
   </div>
 </section>
 
 
-<!-- ───────────────────────────── ESPECIALIDAD ───────────────────────────── -->
-<section class="band">
-  <div class="band__glow" aria-hidden="true"></div>
-  <div class="wrap band__in reveal">
-    <p class="eyebrow eyebrow--center"><span class="dot"></span> La especialidad</p>
-    <h2 class="band__title">Pegging</h2>
-    <p class="band__text">
+<!-- ─────────────────────────── ESPECIALIDAD ─────────────────────── -->
+<section class="feat">
+  <div class="w feat__in rv">
+    <p class="kick kick--c"><span class="kick__d"></span>La especialidad</p>
+    <h2 class="feat__t"><em>Pegging</em></h2>
+    <p class="feat__x">
       Juego anal con hombres heterosexuales. Es la práctica por la que más se me conoce
       y la que más disfruto: progresiva cuando hace falta, implacable cuando toca.
       Desde la primera dilatación hasta sesiones de strapon largas y exigentes.
     </p>
-    <div class="band__tags">
+    <div class="feat__tags">
       <span>Dilatación anal</span><span>Strapon</span><span>Sodomización</span><span>Primera vez</span>
     </div>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── PRÁCTICAS ───────────────────────────── -->
-<section class="sec" id="practicas">
-  <div class="wrap">
-    <header class="sechead reveal">
-      <p class="eyebrow"><span class="dot"></span> Repertorio</p>
-      <h2 class="h2">Prácticas</h2>
-      <p class="sechead__text">
+<!-- ───────────────────────────── PRÁCTICAS ──────────────────────── -->
+<section class="s" id="practicas">
+  <div class="w">
+    <header class="sh rv">
+      <p class="kick"><span class="kick__d"></span>Repertorio</p>
+      <h2 class="t2">Prácticas</h2>
+      <p class="sh__x">
         Treinta disciplinas. Todo se negocia antes de la sesión: tus límites y los míos
         se hablan con claridad y se respetan sin excepción.
       </p>
     </header>
 
-    <div class="filters reveal">
-      <div class="filters__chips" role="group" aria-label="Filtrar prácticas">
-        <button class="chip is-on" data-f="all" type="button">Todas <i>30</i></button>
-        <button class="chip" data-f="anal" type="button">Anal &amp; strapon <i>4</i></button>
-        <button class="chip" data-f="fetiche" type="button">Fetichismo <i>7</i></button>
-        <button class="chip" data-f="dolor" type="button">Dolor &amp; castigo <i>6</i></button>
-        <button class="chip" data-f="bondage" type="button">Bondage &amp; control <i>5</i></button>
-        <button class="chip" data-f="mental" type="button">Mental &amp; roles <i>5</i></button>
-        <button class="chip" data-f="online" type="button">Online &amp; tributos <i>3</i></button>
+    <div class="flt rv">
+      <div class="flt__c" role="group" aria-label="Filtrar prácticas">
+        <button class="ch on" data-f="all" type="button" data-c>Todas<i>30</i></button>
+        <button class="ch" data-f="anal" type="button" data-c>Anal &amp; strapon<i>4</i></button>
+        <button class="ch" data-f="fetiche" type="button" data-c>Fetichismo<i>7</i></button>
+        <button class="ch" data-f="dolor" type="button" data-c>Dolor &amp; castigo<i>6</i></button>
+        <button class="ch" data-f="bondage" type="button" data-c>Bondage &amp; control<i>5</i></button>
+        <button class="ch" data-f="mental" type="button" data-c>Mental &amp; roles<i>5</i></button>
+        <button class="ch" data-f="online" type="button" data-c>Online &amp; tributos<i>3</i></button>
       </div>
-      <label class="search">
+      <label class="sch">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input type="search" id="pfind" placeholder="Buscar práctica…" aria-label="Buscar práctica">
       </label>
     </div>
 
-    <ul class="pgrid" id="pgrid">
-      <li class="pcard" data-c="anal"><span class="pcard__n">01</span><h3>Pegging</h3><p>Juego anal con hombres heterosexuales.</p></li>
-      <li class="pcard" data-c="anal"><span class="pcard__n">02</span><h3>Strapon</h3><p>Sesiones de arnés, progresivas o exigentes.</p></li>
-      <li class="pcard" data-c="anal"><span class="pcard__n">03</span><h3>Sodomización</h3><p>Penetración anal dirigida por mí.</p></li>
-      <li class="pcard" data-c="anal"><span class="pcard__n">04</span><h3>Dilatación anal</h3><p>Trabajo progresivo con plugs y calibres.</p></li>
+    <ul class="pl" id="pgrid">
+      <li class="p" data-c2="anal"><i>01</i><h3>Pegging</h3><p>Juego anal con hombres heterosexuales.</p></li>
+      <li class="p" data-c2="anal"><i>02</i><h3>Strapon</h3><p>Sesiones de arnés, progresivas o exigentes.</p></li>
+      <li class="p" data-c2="anal"><i>03</i><h3>Sodomización</h3><p>Penetración anal dirigida por mí.</p></li>
+      <li class="p" data-c2="anal"><i>04</i><h3>Dilatación anal</h3><p>Trabajo progresivo con plugs y calibres.</p></li>
 
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">05</span><h3>Foot fetish</h3><p>Adoración de pies. Una de mis grandes pasiones.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">06</span><h3>Trampling</h3><p>Pisoteo con pie desnudo, tacón o bota.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">07</span><h3>Látex</h3><p>Sesiones en látex integral. Vestuario propio.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">08</span><h3>Face-sitting</h3><p>Dominación con el peso y el control del aire.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">09</span><h3>Smoking fetish</h3><p>Fetichismo del tabaco y el humo.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">10</span><h3>Spitting</h3><p>Fetichismo de la saliva.</p></li>
-      <li class="pcard" data-c="fetiche"><span class="pcard__n">11</span><h3>Scat</h3><p>Práctica extrema. Solo bajo acuerdo previo.</p></li>
+      <li class="p" data-c2="fetiche"><i>05</i><h3>Foot fetish</h3><p>Adoración de pies. Una de mis grandes pasiones.</p></li>
+      <li class="p" data-c2="fetiche"><i>06</i><h3>Trampling</h3><p>Pisoteo con pie desnudo, tacón o bota.</p></li>
+      <li class="p" data-c2="fetiche"><i>07</i><h3>Látex</h3><p>Sesiones en látex integral. Vestuario propio.</p></li>
+      <li class="p" data-c2="fetiche"><i>08</i><h3>Face-sitting</h3><p>Dominación con el peso y el control del aire.</p></li>
+      <li class="p" data-c2="fetiche"><i>09</i><h3>Smoking fetish</h3><p>Fetichismo del tabaco y el humo.</p></li>
+      <li class="p" data-c2="fetiche"><i>10</i><h3>Spitting</h3><p>Fetichismo de la saliva.</p></li>
+      <li class="p" data-c2="fetiche"><i>11</i><h3>Scat</h3><p>Práctica extrema. Solo bajo acuerdo previo.</p></li>
 
-      <li class="pcard" data-c="dolor"><span class="pcard__n">12</span><h3>Spanking</h3><p>Con mano, pala, tabla, caña o fusta.</p></li>
-      <li class="pcard" data-c="dolor"><span class="pcard__n">13</span><h3>Flagelación</h3><p>Trabajo de látigo con graduación precisa.</p></li>
-      <li class="pcard" data-c="dolor"><span class="pcard__n">14</span><h3>Disciplina Inglesa</h3><p>Castigo corporal clásico y protocolo estricto.</p></li>
-      <li class="pcard" data-c="dolor"><span class="pcard__n">15</span><h3>CBT</h3><p>Tortura genital graduada.</p></li>
-      <li class="pcard" data-c="dolor"><span class="pcard__n">16</span><h3>Ballbusting</h3><p>Impacto controlado. Intensidad pactada.</p></li>
-      <li class="pcard" data-c="dolor"><span class="pcard__n">17</span><h3>Bofetadas</h3><p>Face slapping dentro del juego de poder.</p></li>
+      <li class="p" data-c2="dolor"><i>12</i><h3>Spanking</h3><p>Con mano, pala, tabla, caña o fusta.</p></li>
+      <li class="p" data-c2="dolor"><i>13</i><h3>Flagelación</h3><p>Trabajo de látigo con graduación precisa.</p></li>
+      <li class="p" data-c2="dolor"><i>14</i><h3>Disciplina Inglesa</h3><p>Castigo corporal clásico y protocolo estricto.</p></li>
+      <li class="p" data-c2="dolor"><i>15</i><h3>CBT</h3><p>Tortura genital graduada.</p></li>
+      <li class="p" data-c2="dolor"><i>16</i><h3>Ballbusting</h3><p>Impacto controlado. Intensidad pactada.</p></li>
+      <li class="p" data-c2="dolor"><i>17</i><h3>Bofetadas</h3><p>Face slapping dentro del juego de poder.</p></li>
 
-      <li class="pcard" data-c="bondage"><span class="pcard__n">18</span><h3>Ataduras</h3><p>Bondage con cuerda, cuero y metal.</p></li>
-      <li class="pcard" data-c="bondage"><span class="pcard__n">19</span><h3>Momificación</h3><p>Inmovilización total y envoltura.</p></li>
-      <li class="pcard" data-c="bondage"><span class="pcard__n">20</span><h3>Privación sensorial</h3><p>Vista, oído y tacto bajo mi control.</p></li>
-      <li class="pcard" data-c="bondage"><span class="pcard__n">21</span><h3>Control de la respiración</h3><p>Asfixia controlada con vigilancia constante.</p></li>
-      <li class="pcard" data-c="bondage"><span class="pcard__n">22</span><h3>Control de la castidad</h3><p>Gestión de jaula a corto o largo plazo.</p></li>
+      <li class="p" data-c2="bondage"><i>18</i><h3>Ataduras</h3><p>Bondage con cuerda, cuero y metal.</p></li>
+      <li class="p" data-c2="bondage"><i>19</i><h3>Momificación</h3><p>Inmovilización total y envoltura.</p></li>
+      <li class="p" data-c2="bondage"><i>20</i><h3>Privación sensorial</h3><p>Vista, oído y tacto bajo mi control.</p></li>
+      <li class="p" data-c2="bondage"><i>21</i><h3>Control de la respiración</h3><p>Asfixia controlada con vigilancia constante.</p></li>
+      <li class="p" data-c2="bondage"><i>22</i><h3>Control de la castidad</h3><p>Gestión de jaula a corto o largo plazo.</p></li>
 
-      <li class="pcard" data-c="mental"><span class="pcard__n">23</span><h3>Humillación</h3><p>Verbal y psicológica, a tu medida.</p></li>
-      <li class="pcard" data-c="mental"><span class="pcard__n">24</span><h3>Animalización</h3><p>Petplay: perro, poni, cerdo.</p></li>
-      <li class="pcard" data-c="mental"><span class="pcard__n">25</span><h3>Feminización</h3><p>Transformación completa con vestuario.</p></li>
-      <li class="pcard" data-c="mental"><span class="pcard__n">26</span><h3>Psicología</h3><p>Trabajo sobre el origen real de tu fetiche.</p></li>
-      <li class="pcard" data-c="mental"><span class="pcard__n">27</span><h3>Medical</h3><p>Escenografía clínica y juego médico.</p></li>
+      <li class="p" data-c2="mental"><i>23</i><h3>Humillación</h3><p>Verbal y psicológica, a tu medida.</p></li>
+      <li class="p" data-c2="mental"><i>24</i><h3>Animalización</h3><p>Petplay: perro, poni, cerdo.</p></li>
+      <li class="p" data-c2="mental"><i>25</i><h3>Feminización</h3><p>Transformación completa con vestuario.</p></li>
+      <li class="p" data-c2="mental"><i>26</i><h3>Psicología</h3><p>Trabajo sobre el origen real de tu fetiche.</p></li>
+      <li class="p" data-c2="mental"><i>27</i><h3>Medical</h3><p>Escenografía clínica y juego médico.</p></li>
 
-      <li class="pcard" data-c="online"><span class="pcard__n">28</span><h3>Findom</h3><p>Dominación financiera y tributos.</p></li>
-      <li class="pcard" data-c="online"><span class="pcard__n">29</span><h3>Contenido personalizado</h3><p>Material creado solo para ti.</p></li>
-      <li class="pcard" data-c="online"><span class="pcard__n">30</span><h3>Vídeos personalizados</h3><p>Customs grabados bajo tu guion.</p></li>
+      <li class="p" data-c2="online"><i>28</i><h3>Findom</h3><p>Dominación financiera y tributos.</p></li>
+      <li class="p" data-c2="online"><i>29</i><h3>Contenido personalizado</h3><p>Material creado solo para ti.</p></li>
+      <li class="p" data-c2="online"><i>30</i><h3>Vídeos personalizados</h3><p>Customs grabados bajo tu guion.</p></li>
     </ul>
 
-    <p class="pgrid__empty" id="pempty" hidden>Ninguna práctica coincide con esa búsqueda.</p>
+    <p class="pl__e" id="pempty" hidden>Ninguna práctica coincide con esa búsqueda.</p>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── SESIONES ───────────────────────────── -->
-<section class="sec sec--alt" id="sesiones">
-  <div class="wrap">
-    <header class="sechead reveal">
-      <p class="eyebrow"><span class="dot"></span> Formatos</p>
-      <h2 class="h2">Sesiones</h2>
-      <p class="sechead__text">
+<!-- ───────────────────────────── SESIONES ───────────────────────── -->
+<section class="s s--alt" id="sesiones">
+  <div class="w">
+    <header class="sh rv">
+      <p class="kick"><span class="kick__d"></span>Formatos</p>
+      <h2 class="t2">Sesiones</h2>
+      <p class="sh__x">
         Desde el fetichismo más simple hasta la escenografía más elaborada.
         Dime qué buscas y la construimos.
       </p>
     </header>
 
-    <div class="scards">
-      <article class="scard reveal">
-        <span class="scard__ico">I</span>
-        <h3>Presencial · Valencia</h3>
-        <p>Sesiones en espacio privado y equipado en Valencia. Duración y escenografía a convenir en la entrevista previa.</p>
-        <ul><li>Equipamiento y vestuario propios</li><li>Discreción absoluta</li><li>Cita previa obligatoria</li></ul>
+    <div class="fm">
+      <article class="fm__i rv" data-c>
+        <span class="fm__n">I</span>
+        <div class="fm__b">
+          <h3>Presencial · Valencia</h3>
+          <p>Sesiones en espacio privado y equipado. Duración y escenografía a convenir en la entrevista previa.</p>
+          <ul><li>Equipamiento y vestuario propios</li><li>Discreción absoluta</li><li>Cita previa obligatoria</li></ul>
+        </div>
       </article>
 
-      <article class="scard reveal">
-        <span class="scard__ico">II</span>
-        <h3>Online</h3>
-        <p>Dominación a distancia por videollamada o mensajería. Tareas, protocolo y control continuado.</p>
-        <ul><li>Sesiones en directo</li><li>Tareas y rutinas</li><li>Control de castidad a distancia</li></ul>
+      <article class="fm__i rv" data-c>
+        <span class="fm__n">II</span>
+        <div class="fm__b">
+          <h3>Online</h3>
+          <p>Dominación a distancia por videollamada o mensajería. Tareas, protocolo y control continuado.</p>
+          <ul><li>Sesiones en directo</li><li>Tareas y rutinas</li><li>Control de castidad a distancia</li></ul>
+        </div>
       </article>
 
-      <article class="scard reveal">
-        <span class="scard__ico">III</span>
-        <h3>Contenido a medida</h3>
-        <p>Vídeos y material personalizado grabados bajo tu guion, dentro de mis límites.</p>
-        <ul><li>Vídeos personalizados</li><li>Audios y fotografía</li><li>Guion pactado previamente</li></ul>
+      <article class="fm__i rv" data-c>
+        <span class="fm__n">III</span>
+        <div class="fm__b">
+          <h3>Contenido a medida</h3>
+          <p>Vídeos y material personalizado grabados bajo tu guion, dentro de mis límites.</p>
+          <ul><li>Vídeos personalizados</li><li>Audios y fotografía</li><li>Guion pactado previamente</li></ul>
+        </div>
       </article>
 
-      <article class="scard reveal">
-        <span class="scard__ico">IV</span>
-        <h3>Findom &amp; tributos</h3>
-        <p>Dominación financiera para quien encuentra su lugar en el gasto y la entrega.</p>
-        <ul><li>Tributos puntuales</li><li>Relación continuada</li><li>Sin contacto físico</li></ul>
+      <article class="fm__i rv" data-c>
+        <span class="fm__n">IV</span>
+        <div class="fm__b">
+          <h3>Findom &amp; tributos</h3>
+          <p>Dominación financiera para quien encuentra su lugar en el gasto y la entrega.</p>
+          <ul><li>Tributos puntuales</li><li>Relación continuada</li><li>Sin contacto físico</li></ul>
+        </div>
       </article>
     </div>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── GALERÍA ───────────────────────────── -->
-<section class="sec" id="galeria">
-  <div class="wrap">
-    <header class="sechead reveal">
-      <p class="eyebrow"><span class="dot"></span> Imágenes</p>
-      <h2 class="h2">Galería</h2>
-      <p class="sechead__text">Material propio. Prohibida su reproducción o difusión.</p>
+<!-- ───────────────────────────── GALERÍA 3D ─────────────────────── -->
+<section class="s sg" id="galeria">
+  <div class="w">
+    <header class="sh sh--c rv">
+      <p class="kick kick--c"><span class="kick__d"></span>Imágenes</p>
+      <h2 class="t2">Galería</h2>
+      <p class="sh__x">Arrastra para girar. Pulsa una imagen para ampliarla.</p>
     </header>
+  </div>
 
-    <div class="gal" id="gal">
-      <button class="gal__i reveal" data-src="assets/img/lith-02.jpg" type="button"><img src="assets/img/lith-02.jpg" alt="Miss Lith · 1" loading="lazy" width="1334" height="2000"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-01.jpg" type="button"><img src="assets/img/lith-01.jpg" alt="Miss Lith · 2" loading="lazy" width="1333" height="2000"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-03.jpg" type="button"><img src="assets/img/lith-03.jpg" alt="Miss Lith · 3" loading="lazy" width="1334" height="2000"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-04.jpg" type="button"><img src="assets/img/lith-04.jpg" alt="Miss Lith · 4" loading="lazy" width="1333" height="2000"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-05.jpg" type="button"><img src="assets/img/lith-05.jpg" alt="Miss Lith · 5" loading="lazy" width="707" height="1061"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-06.jpg" type="button"><img src="assets/img/lith-06.jpg" alt="Miss Lith · 6" loading="lazy" width="1333" height="2000"></button>
-      <button class="gal__i reveal" data-src="assets/img/lith-07.jpg" type="button"><img src="assets/img/lith-07.jpg" alt="Miss Lith · 7" loading="lazy" width="699" height="1049"></button>
-      <button class="gal__i gal__i--wide reveal" data-src="assets/img/lith-08.jpg" type="button"><img src="assets/img/lith-08.jpg" alt="Miss Lith · 8" loading="lazy" width="1001" height="584"></button>
+  <!-- el carrusel 3D sustituye a la retícula cuando WebGL arranca -->
+  <div class="drum" id="drum" hidden>
+    <canvas id="drum-c"></canvas>
+    <span class="drum__hint" id="drum-hint">↔ arrastra</span>
+  </div>
+
+  <div class="w">
+    <div class="grid" id="grid">
+      <button class="gi rv" data-src="assets/img/lith-02.jpg" type="button"><img src="assets/img/lith-02.jpg" alt="Miss Lith · 1" loading="lazy" width="1334" height="2000"></button>
+      <button class="gi rv" data-src="assets/img/lith-01.jpg" type="button"><img src="assets/img/lith-01.jpg" alt="Miss Lith · 2" loading="lazy" width="1333" height="2000"></button>
+      <button class="gi rv" data-src="assets/img/lith-03.jpg" type="button"><img src="assets/img/lith-03.jpg" alt="Miss Lith · 3" loading="lazy" width="1334" height="2000"></button>
+      <button class="gi rv" data-src="assets/img/lith-04.jpg" type="button"><img src="assets/img/lith-04.jpg" alt="Miss Lith · 4" loading="lazy" width="1333" height="2000"></button>
+      <button class="gi rv" data-src="assets/img/lith-05.jpg" type="button"><img src="assets/img/lith-05.jpg" alt="Miss Lith · 5" loading="lazy" width="707" height="1061"></button>
+      <button class="gi rv" data-src="assets/img/lith-06.jpg" type="button"><img src="assets/img/lith-06.jpg" alt="Miss Lith · 6" loading="lazy" width="1333" height="2000"></button>
+      <button class="gi rv" data-src="assets/img/lith-07.jpg" type="button"><img src="assets/img/lith-07.jpg" alt="Miss Lith · 7" loading="lazy" width="699" height="1049"></button>
+      <button class="gi rv" data-src="assets/img/lith-08.jpg" type="button"><img src="assets/img/lith-08.jpg" alt="Miss Lith · 8" loading="lazy" width="1001" height="584"></button>
     </div>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── PROTOCOLO ───────────────────────────── -->
-<section class="sec sec--alt" id="protocolo">
-  <div class="wrap proto">
-    <div class="proto__left">
-      <p class="eyebrow reveal"><span class="dot"></span> Antes de escribir</p>
-      <h2 class="h2 reveal">Protocolo</h2>
-      <p class="proto__intro reveal">
-        Leer esto no es opcional. Los mensajes que no lo respeten no reciben respuesta.
-      </p>
+<!-- ───────────────────────────── PROTOCOLO ──────────────────────── -->
+<section class="s s--alt" id="protocolo">
+  <div class="w proto">
+    <div class="proto__l">
+      <p class="kick rv"><span class="kick__d"></span>Antes de escribir</p>
+      <h2 class="t2 rv">Protocolo</h2>
+      <p class="proto__x rv">Leer esto no es opcional. Los mensajes que no lo respeten no reciben respuesta.</p>
 
       <ol class="steps">
-        <li class="reveal"><span>01</span><div><h3>Preséntate</h3><p>Nombre o alias, edad y experiencia previa. Nada de mensajes de una sola palabra.</p></div></li>
-        <li class="reveal"><span>02</span><div><h3>Dime qué buscas</h3><p>Prácticas que te interesan, tus límites duros y la duración que tienes en mente.</p></div></li>
-        <li class="reveal"><span>03</span><div><h3>Entrevista previa</h3><p>Hablamos y acordamos escenografía, intensidad, señal de seguridad y tarifa.</p></div></li>
-        <li class="reveal"><span>04</span><div><h3>Confirmación</h3><p>Fecha cerrada con reserva. La puntualidad forma parte del protocolo.</p></div></li>
+        <li class="rv"><span>01</span><div><h3>Preséntate</h3><p>Nombre o alias, edad y experiencia previa. Nada de mensajes de una sola palabra.</p></div></li>
+        <li class="rv"><span>02</span><div><h3>Dime qué buscas</h3><p>Prácticas que te interesan, tus límites duros y la duración que tienes en mente.</p></div></li>
+        <li class="rv"><span>03</span><div><h3>Entrevista previa</h3><p>Hablamos y acordamos escenografía, intensidad, señal de seguridad y tarifa.</p></div></li>
+        <li class="rv"><span>04</span><div><h3>Confirmación</h3><p>Fecha cerrada con reserva. La puntualidad forma parte del protocolo.</p></div></li>
       </ol>
     </div>
 
-    <aside class="rules reveal">
+    <aside class="rules rv">
       <h3>Normas</h3>
       <ul>
         <li>Mayor de 18 años, sobrio y en condiciones.</li>
@@ -387,132 +412,76 @@
         <li>Discreción mutua garantizada.</li>
         <li>No ofrezco ni se negocia sexo ni contacto íntimo.</li>
       </ul>
-      <p class="rules__foot">Seguridad, cordura y consentimiento. Siempre.</p>
+      <p class="rules__f">Seguridad, cordura y consentimiento. Siempre.</p>
     </aside>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── TARIFAS ───────────────────────────── -->
-<section class="sec" id="tarifas">
-  <div class="wrap">
-    <header class="sechead reveal">
-      <p class="eyebrow"><span class="dot"></span> Condiciones</p>
-      <h2 class="h2">Tarifas</h2>
-      <p class="sechead__text">
+<!-- ───────────────────────────── TARIFAS ────────────────────────── -->
+<section class="s" id="tarifas">
+  <div class="w">
+    <header class="sh rv">
+      <p class="kick"><span class="kick__d"></span>Condiciones</p>
+      <h2 class="t2">Tarifas</h2>
+      <p class="sh__x">
         Cada sesión se presupuesta según formato, duración y escenografía.
         Consulta disponibilidad y condiciones por mensaje.
       </p>
     </header>
 
-    <div class="rates">
-      <article class="rate reveal">
-        <h3>Presencial</h3>
-        <p class="rate__p">A consultar</p>
-        <p class="rate__d">Valencia · duración a convenir</p>
-        <a class="rate__a" href="#contacto">Consultar</a>
-      </article>
-      <article class="rate rate--hi reveal">
-        <span class="rate__flag">Más solicitada</span>
-        <h3>Sesión de pegging</h3>
-        <p class="rate__p">A consultar</p>
-        <p class="rate__d">Progresiva o intensiva</p>
-        <a class="rate__a" href="#contacto">Consultar</a>
-      </article>
-      <article class="rate reveal">
-        <h3>Online</h3>
-        <p class="rate__p">A consultar</p>
-        <p class="rate__d">Videollamada o control continuado</p>
-        <a class="rate__a" href="#contacto">Consultar</a>
-      </article>
-      <article class="rate reveal">
-        <h3>Contenido a medida</h3>
-        <p class="rate__p">A consultar</p>
-        <p class="rate__d">Según guion y duración</p>
-        <a class="rate__a" href="#contacto">Consultar</a>
-      </article>
+    <div class="rt">
+      <article class="rt__i rv" data-c><h3>Presencial</h3><p class="rt__p">A consultar</p><p class="rt__d">Valencia · duración a convenir</p><a href="#contacto">Consultar</a></article>
+      <article class="rt__i rt__i--hi rv" data-c><span class="rt__f">Más solicitada</span><h3>Sesión de pegging</h3><p class="rt__p">A consultar</p><p class="rt__d">Progresiva o intensiva</p><a href="#contacto">Consultar</a></article>
+      <article class="rt__i rv" data-c><h3>Online</h3><p class="rt__p">A consultar</p><p class="rt__d">Videollamada o control continuado</p><a href="#contacto">Consultar</a></article>
+      <article class="rt__i rv" data-c><h3>Contenido a medida</h3><p class="rt__p">A consultar</p><p class="rt__d">Según guion y duración</p><a href="#contacto">Consultar</a></article>
     </div>
   </div>
 </section>
 
 
-<!-- ───────────────────────────── CONTACTO ───────────────────────────── -->
-<section class="sec sec--contact" id="contacto">
-  <div class="contact__glow" aria-hidden="true"></div>
-  <div class="wrap contact">
+<!-- ───────────────────────────── CONTACTO ───────────────────────── -->
+<section class="s sc" id="contacto">
+  <div class="w ct">
 
-    <div class="contact__left">
-      <p class="eyebrow reveal"><span class="dot"></span> Contacto</p>
-      <h2 class="h2 reveal">Escríbeme</h2>
-      <p class="contact__lede reveal">
-        Preséntate con educación y cuéntame qué buscas. Respondo a los mensajes
-        que respetan el protocolo.
+    <div class="ct__l">
+      <p class="kick rv"><span class="kick__d"></span>Contacto</p>
+      <h2 class="t2 rv">Escríbeme</h2>
+      <p class="ct__x rv">
+        Preséntate con educación y cuéntame qué buscas.
+        Respondo a los mensajes que respetan el protocolo.
       </p>
 
       <ul class="chan">
-        <li class="reveal">
-          <a href="https://wa.me/34611181399" target="_blank" rel="noopener noreferrer">
-            <span class="chan__k">WhatsApp</span>
-            <span class="chan__v">+34 611 18 13 99</span>
-          </a>
-        </li>
-        <li class="reveal">
-          <a href="tel:+34611181399">
-            <span class="chan__k">Teléfono</span>
-            <span class="chan__v">+34 611 18 13 99</span>
-          </a>
-        </li>
-        <li class="reveal">
-          <a href="mailto:lilithbdsmvlc@gmail.com">
-            <span class="chan__k">Email</span>
-            <span class="chan__v">lilithbdsmvlc@gmail.com</span>
-          </a>
-        </li>
-        <li class="reveal">
-          <a href="https://twitter.com/missLith_domina" target="_blank" rel="noopener noreferrer">
-            <span class="chan__k">X / Twitter</span>
-            <span class="chan__v">@missLith_domina</span>
-          </a>
-        </li>
+        <li class="rv"><a href="https://wa.me/34611181399" target="_blank" rel="noopener noreferrer" data-c><span>WhatsApp</span><b>+34 611 18 13 99</b></a></li>
+        <li class="rv"><a href="tel:+34611181399" data-c><span>Teléfono</span><b>+34 611 18 13 99</b></a></li>
+        <li class="rv"><a href="mailto:lilithbdsmvlc@gmail.com" data-c><span>Email</span><b>lilithbdsmvlc@gmail.com</b></a></li>
+        <li class="rv"><a href="https://twitter.com/missLith_domina" target="_blank" rel="noopener noreferrer" data-c><span>X / Twitter</span><b>@missLith_domina</b></a></li>
       </ul>
     </div>
 
-    <form class="form reveal" id="form">
+    <form class="form rv" id="form">
       <h3 class="form__t">Solicitud de sesión</h3>
 
-      <div class="field">
-        <label for="f-name">Nombre o alias</label>
-        <input id="f-name" name="name" type="text" required autocomplete="off" placeholder="Cómo quieres que te llame">
-      </div>
+      <div class="f"><label for="f-name">Nombre o alias</label>
+        <input id="f-name" name="name" type="text" required autocomplete="off" placeholder="Cómo quieres que te llame"></div>
 
-      <div class="field field--2">
-        <div>
-          <label for="f-age">Edad</label>
-          <input id="f-age" name="age" type="number" min="18" max="99" required placeholder="18+">
-        </div>
-        <div>
-          <label for="f-type">Formato</label>
+      <div class="f2">
+        <div><label for="f-age">Edad</label><input id="f-age" name="age" type="number" min="18" max="99" required placeholder="18+"></div>
+        <div><label for="f-type">Formato</label>
           <select id="f-type" name="type">
-            <option>Presencial en Valencia</option>
-            <option>Online</option>
-            <option>Contenido personalizado</option>
-            <option>Findom / tributos</option>
-          </select>
-        </div>
+            <option>Presencial en Valencia</option><option>Online</option>
+            <option>Contenido personalizado</option><option>Findom / tributos</option>
+          </select></div>
       </div>
 
-      <div class="field">
-        <label for="f-msg">Qué buscas y cuáles son tus límites</label>
-        <textarea id="f-msg" name="msg" rows="5" required placeholder="Experiencia previa, prácticas que te interesan, límites duros y duración que tienes en mente."></textarea>
-      </div>
+      <div class="f"><label for="f-msg">Qué buscas y cuáles son tus límites</label>
+        <textarea id="f-msg" name="msg" rows="5" required placeholder="Experiencia previa, prácticas que te interesan, límites duros y duración que tienes en mente."></textarea></div>
 
-      <label class="check">
-        <input type="checkbox" id="f-ok" required>
-        <span>Soy mayor de 18 años y he leído el protocolo.</span>
-      </label>
+      <label class="ck"><input type="checkbox" id="f-ok" required><span>Soy mayor de 18 años y he leído el protocolo.</span></label>
 
-      <button class="btn btn--gold btn--full" type="submit">Enviar solicitud</button>
-      <p class="form__note">Se abrirá tu cliente de correo con el mensaje preparado.</p>
+      <button class="btn btn--fill btn--full" type="submit" data-c><span>Enviar solicitud</span></button>
+      <p class="form__n">Se abrirá tu cliente de correo con el mensaje preparado.</p>
     </form>
 
   </div>
@@ -521,44 +490,40 @@
 </main>
 
 
-<!-- ───────────────────────────── PIE ───────────────────────────── -->
-<footer class="ftr">
-  <div class="wrap ftr__in">
-    <div class="ftr__brand">
-      <span class="brand__name">Miss Lith</span>
+<!-- ───────────────────────────── PIE ────────────────────────────── -->
+<footer class="ft">
+  <div class="w ft__in">
+    <div class="ft__b">
+      <span class="brand__n">Miss Lith</span>
       <p>Domina profesional · Valencia, España</p>
     </div>
 
-    <nav class="ftr__nav" aria-label="Pie">
-      <a href="#sobre">Sobre mí</a>
-      <a href="#practicas">Prácticas</a>
-      <a href="#sesiones">Sesiones</a>
-      <a href="#galeria">Galería</a>
-      <a href="#protocolo">Protocolo</a>
-      <a href="#contacto">Contacto</a>
+    <nav class="ft__n" aria-label="Pie">
+      <a href="#sobre" data-c>Sobre mí</a><a href="#practicas" data-c>Prácticas</a>
+      <a href="#sesiones" data-c>Sesiones</a><a href="#galeria" data-c>Galería</a>
+      <a href="#protocolo" data-c>Protocolo</a><a href="#contacto" data-c>Contacto</a>
     </nav>
 
-    <div class="ftr__legal">
-      <span class="ftr__18">18+</span>
-      <p>
-        Contenido para adultos. Todas las personas que aparecen en este sitio son mayores de edad.
-        Las imágenes son propiedad de Miss Lith; prohibida su reproducción.
-      </p>
-      <p class="ftr__c">© <span id="yr">2026</span> Miss Lith · Todos los derechos reservados</p>
+    <div class="ft__l">
+      <span class="ft__18">18+</span>
+      <p>Contenido para adultos. Todas las personas que aparecen en este sitio son mayores de edad.
+         Las imágenes son propiedad de Miss Lith; prohibida su reproducción.</p>
+      <p class="ft__c">© <span id="yr">2026</span> Miss Lith · Todos los derechos reservados</p>
     </div>
   </div>
 </footer>
 
 
-<!-- ───────────────────────────── LIGHTBOX ───────────────────────────── -->
+<!-- ───────────────────────────── LIGHTBOX ───────────────────────── -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Imagen ampliada" hidden>
-  <button class="lb__x" id="lb-x" type="button" aria-label="Cerrar">✕</button>
-  <button class="lb__nav lb__nav--p" id="lb-p" type="button" aria-label="Anterior">‹</button>
-  <img class="lb__img" id="lb-img" alt="">
-  <button class="lb__nav lb__nav--n" id="lb-n" type="button" aria-label="Siguiente">›</button>
+  <button class="lb__x" id="lb-x" type="button" aria-label="Cerrar" data-c>✕</button>
+  <button class="lb__a lb__a--p" id="lb-p" type="button" aria-label="Anterior" data-c>‹</button>
+  <img class="lb__i" id="lb-img" alt="">
+  <button class="lb__a lb__a--n" id="lb-n" type="button" aria-label="Siguiente" data-c>›</button>
   <span class="lb__c" id="lb-c"></span>
 </div>
 
 <script src="assets/js/main.js"></script>
+<script type="module" src="assets/js/fx.js"></script>
 </body>
 </html>

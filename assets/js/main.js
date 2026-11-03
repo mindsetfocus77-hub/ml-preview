@@ -1,35 +1,48 @@
 /* =========================================================================
-   Miss Lith — interacciones
+   Miss Lith — interfaz
    ========================================================================= */
 (function () {
   'use strict';
 
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── Verificación de edad ─────────────────────────────────────────── */
-  var gate = $('#agegate');
+  /* ── Umbral 18+ ───────────────────────────────────────────────────── */
+  var gate = $('#gate');
   var KEY  = 'ml-age-ok';
-  var passed = false;
+  var seen = false;
 
-  try { passed = sessionStorage.getItem(KEY) === '1'; } catch (e) { passed = false; }
+  try { seen = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
 
-  if (passed) {
+  var openSite = function () {
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+    $('#gate-load').classList.add('on');
+    setTimeout(function () {
+      gate.classList.add('off');
+      document.documentElement.classList.remove('lock');
+      document.body.classList.add('entered');
+    }, 520);
+    setTimeout(function () { gate.remove(); }, 1500);
+  };
+
+  if (seen) {
     gate.remove();
+    document.body.classList.add('entered');
   } else {
-    document.documentElement.classList.add('is-locked');
-    $('#ag-yes').addEventListener('click', function () {
-      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
-      gate.classList.add('is-gone');
-      document.documentElement.classList.remove('is-locked');
-      setTimeout(function () { gate.remove(); }, 700);
-    });
+    document.documentElement.classList.add('lock');
+    $('#gate-yes').addEventListener('click', openSite);
   }
 
-  /* ── Cabecera ─────────────────────────────────────────────────────── */
-  var hdr = $('#hdr');
+  /* ── Cabecera + barra de progreso ─────────────────────────────────── */
+  var hdr  = $('#hdr');
+  var bar  = $('#progress').firstElementChild;
+
   var onScroll = function () {
-    hdr.classList.toggle('is-stuck', window.scrollY > 40);
+    var y = window.scrollY;
+    hdr.classList.toggle('stuck', y > 40);
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
   };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
@@ -39,48 +52,90 @@
   var nav    = $('#nav');
 
   var closeNav = function () {
-    nav.classList.remove('is-open');
-    burger.classList.remove('is-on');
-    hdr.classList.remove('is-navopen');
-    document.documentElement.classList.remove('is-locked');
+    nav.classList.remove('open');
+    burger.classList.remove('on');
+    hdr.classList.remove('navopen');
+    document.documentElement.classList.remove('lock');
     burger.setAttribute('aria-expanded', 'false');
   };
 
   burger.addEventListener('click', function () {
-    var open = nav.classList.toggle('is-open');
-    burger.classList.toggle('is-on', open);
-    hdr.classList.toggle('is-navopen', open);
-    document.documentElement.classList.toggle('is-locked', open);
+    var open = nav.classList.toggle('open');
+    burger.classList.toggle('on', open);
+    hdr.classList.toggle('navopen', open);
+    document.documentElement.classList.toggle('lock', open);
     burger.setAttribute('aria-expanded', String(open));
   });
   $$('a', nav).forEach(function (a) { a.addEventListener('click', closeNav); });
 
-  /* ── Reveal al hacer scroll ───────────────────────────────────────── */
-  var targets = $$('.reveal');
+  /* ── Cursor ───────────────────────────────────────────────────────── */
+  var cur = $('#cursor');
 
-  if ('IntersectionObserver' in window) {
+  if (!reduce && window.matchMedia('(hover: hover)').matches) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, shown = false;
+
+    window.addEventListener('mousemove', function (e) {
+      tx = e.clientX; ty = e.clientY;
+      if (!shown) { cx = tx; cy = ty; shown = true; cur.classList.add('on'); }
+    }, { passive: true });
+
+    (function loop () {
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+      requestAnimationFrame(loop);
+    })();
+
+    var hot = 'a,button,input,select,textarea,label,[data-c],.gi,.p,.drum canvas';
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest && e.target.closest(hot)) cur.classList.add('hot');
+    });
+    document.addEventListener('mouseout', function (e) {
+      if (e.target.closest && e.target.closest(hot)) cur.classList.remove('hot');
+    });
+  }
+
+  /* ── Reveal ───────────────────────────────────────────────────────── */
+  var marks = $$('.rv, .rv-l');
+
+  if ('IntersectionObserver' in window && !reduce) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
         var el = en.target;
         var sibs = Array.prototype.slice.call(el.parentNode.children).filter(function (n) {
-          return n.classList.contains('reveal');
+          return n.classList.contains('rv') || n.classList.contains('rv-l');
         });
         var i = sibs.indexOf(el);
-        el.style.transitionDelay = (i > 0 ? Math.min(i, 6) * 70 : 0) + 'ms';
-        el.classList.add('is-in');
+        el.style.transitionDelay = (i > 0 ? Math.min(i, 7) * 80 : 0) + 'ms';
+        el.classList.add('in');
         io.unobserve(el);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
 
-    targets.forEach(function (el) { io.observe(el); });
+    marks.forEach(function (el) { io.observe(el); });
   } else {
-    targets.forEach(function (el) { el.classList.add('is-in'); });
+    marks.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ── Inclinación 3D del retrato ───────────────────────────────────── */
+  var fig  = $('#tilt');
+  var arch = fig && $('.hero__arch', fig);
+
+  if (arch && !reduce && window.matchMedia('(hover: hover)').matches) {
+    fig.addEventListener('mousemove', function (e) {
+      var r = fig.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width  - 0.5;
+      var py = (e.clientY - r.top)  / r.height - 0.5;
+      arch.style.transform =
+        'rotateY(' + (px * 9).toFixed(2) + 'deg) rotateX(' + (-py * 9).toFixed(2) + 'deg) translateZ(14px)';
+    });
+    fig.addEventListener('mouseleave', function () { arch.style.transform = ''; });
   }
 
   /* ── Filtro de prácticas ──────────────────────────────────────────── */
-  var cards = $$('.pcard');
-  var chips = $$('.chip');
+  var items = $$('.p');
+  var chips = $$('.ch');
   var find  = $('#pfind');
   var empty = $('#pempty');
   var cat   = 'all';
@@ -91,32 +146,30 @@
 
   var apply = function () {
     var q = norm(find.value.trim());
-    var shown = 0;
+    var n = 0;
 
-    cards.forEach(function (card) {
-      var okCat = cat === 'all' || card.dataset.c === cat;
-      var okTxt = !q || norm(card.textContent).indexOf(q) > -1;
-      var ok = okCat && okTxt;
-      card.classList.toggle('is-hidden', !ok);
-      if (ok) shown++;
+    items.forEach(function (it) {
+      var ok = (cat === 'all' || it.dataset.c2 === cat) &&
+               (!q || norm(it.textContent).indexOf(q) > -1);
+      it.classList.toggle('hide', !ok);
+      if (ok) n++;
     });
 
-    empty.hidden = shown > 0;
+    empty.hidden = n > 0;
   };
 
   chips.forEach(function (chip) {
     chip.addEventListener('click', function () {
-      chips.forEach(function (c) { c.classList.remove('is-on'); });
-      chip.classList.add('is-on');
+      chips.forEach(function (c) { c.classList.remove('on'); });
+      chip.classList.add('on');
       cat = chip.dataset.f;
       apply();
     });
   });
-
   find.addEventListener('input', apply);
 
   /* ── Lightbox ─────────────────────────────────────────────────────── */
-  var shots = $$('.gal__i');
+  var shots = $$('.gi');
   var lb    = $('#lb');
   var lbImg = $('#lb-img');
   var lbC   = $('#lb-c');
@@ -124,28 +177,25 @@
 
   var show = function (i) {
     idx = (i + shots.length) % shots.length;
-    var btn = shots[idx];
-    lbImg.src = btn.dataset.src;
-    lbImg.alt = $('img', btn).alt;
+    lbImg.src = shots[idx].dataset.src;
+    lbImg.alt = $('img', shots[idx]).alt;
     lbC.textContent = (idx + 1) + ' / ' + shots.length;
   };
 
   var openLb = function (i) {
     show(i);
     lb.hidden = false;
-    document.documentElement.classList.add('is-locked');
-    requestAnimationFrame(function () { lb.classList.add('is-on'); });
+    document.documentElement.classList.add('lock');
+    requestAnimationFrame(function () { lb.classList.add('on'); });
   };
 
   var closeLb = function () {
-    lb.classList.remove('is-on');
-    document.documentElement.classList.remove('is-locked');
-    setTimeout(function () { lb.hidden = true; lbImg.removeAttribute('src'); }, 420);
+    lb.classList.remove('on');
+    document.documentElement.classList.remove('lock');
+    setTimeout(function () { lb.hidden = true; lbImg.removeAttribute('src'); }, 460);
   };
 
-  shots.forEach(function (btn, i) {
-    btn.addEventListener('click', function () { openLb(i); });
-  });
+  shots.forEach(function (b, i) { b.addEventListener('click', function () { openLb(i); }); });
 
   $('#lb-x').addEventListener('click', closeLb);
   $('#lb-p').addEventListener('click', function () { show(idx - 1); });
@@ -159,35 +209,35 @@
     if (e.key === 'ArrowRight') show(idx + 1);
   });
 
-  /* ── Formulario → correo ──────────────────────────────────────────── */
-  var form = $('#form');
+  /* el carrusel 3D entra por aquí */
+  window.ML = {
+    sources: shots.map(function (b) { return b.dataset.src; }),
+    openLightbox: openLb,
+    reduce: reduce
+  };
 
-  form.addEventListener('submit', function (e) {
+  /* ── Formulario → correo ──────────────────────────────────────────── */
+  $('#form').addEventListener('submit', function (e) {
     e.preventDefault();
 
     var name = $('#f-name').value.trim();
-    var age  = $('#f-age').value.trim();
-    var type = $('#f-type').value;
-    var msg  = $('#f-msg').value.trim();
-
-    var subject = 'Solicitud de sesión — ' + (name || 'sin nombre');
     var body = [
       'Nombre o alias: ' + name,
-      'Edad: ' + age,
-      'Formato: ' + type,
+      'Edad: ' + $('#f-age').value.trim(),
+      'Formato: ' + $('#f-type').value,
       '',
       'Qué busco y mis límites:',
-      msg,
+      $('#f-msg').value.trim(),
       '',
       '— Enviado desde misslith.com'
     ].join('\n');
 
     window.location.href = 'mailto:lilithbdsmvlc@gmail.com'
-      + '?subject=' + encodeURIComponent(subject)
+      + '?subject=' + encodeURIComponent('Solicitud de sesión — ' + (name || 'sin nombre'))
       + '&body='    + encodeURIComponent(body);
   });
 
-  /* ── Año en el pie ────────────────────────────────────────────────── */
+  /* ── Año ──────────────────────────────────────────────────────────── */
   $('#yr').textContent = new Date().getFullYear();
 
 })();
