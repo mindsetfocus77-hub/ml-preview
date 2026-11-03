@@ -1,0 +1,4 @@
+# Preview para revisión del cliente. No indexar.
+# Al publicar en el dominio definitivo, borrar este archivo.
+User-agent: *
+Disallow: /
