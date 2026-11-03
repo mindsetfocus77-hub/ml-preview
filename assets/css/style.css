@@ -729,7 +729,9 @@ main, .ft{ position:relative; z-index:2; }
   .fm__b ul{ grid-column:1; grid-row:3; }
 }
 
-@media (max-width:880px){
+/* el menú pasa a hamburguesa antes que el resto: con seis entradas más la marca
+   y el botón, por debajo de ~1040px los enlaces se parten en dos líneas */
+@media (max-width:1040px){
   .hdr__cta{ display:none; }
   .burger{ display:block; }
   .nav{
@@ -741,7 +743,9 @@ main, .ft{ position:relative; z-index:2; }
   }
   .nav.open{ opacity:1; visibility:visible; }
   .nav a{ font-size:1rem; letter-spacing:.22em; }
+}
 
+@media (max-width:880px){
   .hero{ min-height:auto; padding-top:126px; }
   .hero__in{ grid-template-columns:1fr; gap:46px; }
   .hero__fig{ order:-1; max-width:360px; margin-inline:auto; }
