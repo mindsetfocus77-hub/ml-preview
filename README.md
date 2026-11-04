@@ -25,17 +25,35 @@ python -m http.server 8080
 
 ## Dirección visual
 
-**Borgoña y nácar.** Fondo vino casi negro, borgoña de base, nácar rosado en los
-brillos y marfil cálido en el texto. Didone (Bodoni Moda) para los titulares y
-DM Sans para el resto. La idea es terciopelo e intimidad, no el negro y oro
-habitual del sector.
+Didone (Bodoni Moda) para los titulares y DM Sans para el resto, en cualquier
+paleta. **El color aún no está cerrado**: la web lleva un selector de paletas
+abajo a la izquierda para verlas en vivo.
 
-| | |
-|---|---|
-| `#1A0810` | fondo, vino casi negro |
-| `#4A0E22` | borgoña |
-| `#E8C8C0` | nácar rosado |
-| `#F5E9E4` | marfil, texto |
+| Tema | Idea | Fondo | Acento |
+|---|---|---|---|
+| `cromo` *(actual)* | negro, acero y hielo | `#07070B` | `#AEB7C4` |
+| `carbon` | monocromo, negro y hueso | `#060606` | `#D8D4CC` |
+| `medianoche` | índigo profundo y azul hielo | `#060A18` | `#9FB6E8` |
+| `violeta` | tinta violeta y neón | `#0A0618` | `#C9A6FF` |
+| `borgona` | la versión anterior | `#1A0810` | `#E8C8C0` |
+
+### Cómo funciona
+
+Toda la paleta son tokens CSS. Cada tema es un bloque
+`html[data-tema="…"]` al principio de `style.css` y no hay un solo color
+fijo fuera de ahí: las líneas se derivan del acento, y el shader de fondo y
+el tinte del carrusel leen los mismos tokens (`--silk-a/b/c`, `--drum-tint`)
+con `getComputedStyle`, así que el 3D cambia de color con el resto.
+
+El tema elegido se guarda en `localStorage` y se aplica antes de pintar con
+un script en el `<head>`, para que no haya destello.
+
+### Al cerrar el color
+
+Dejar el tema elegido en `:root`, y borrar las tres piezas del selector:
+el bloque «Selector de paletas» de `style.css`, el `<div class="tsw">` de
+`index.html` y el bloque «Tema» de `main.js`. Los demás temas se pueden
+dejar o quitar, da igual: no estorban.
 
 ## El 3D
 

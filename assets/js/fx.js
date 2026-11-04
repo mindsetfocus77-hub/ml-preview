@@ -10,6 +10,18 @@ const reduce = (window.ML && window.ML.reduce) ||
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = window.matchMedia('(pointer: coarse)').matches;
 
+/* El 3D lee su color de los mismos tokens que el CSS, así sigue al tema. */
+const css = getComputedStyle(document.documentElement);
+
+function token (name, into) {
+  const h = css.getPropertyValue(name).trim().replace('#', '');
+  const n = parseInt(h, 16);
+  const v = into || new THREE.Vector3();
+  return Number.isNaN(n)
+    ? v
+    : v.set(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
+}
+
 /* ───────────────────────────── SEDA ───────────────────────────── */
 
 function silk () {
@@ -26,8 +38,17 @@ function silk () {
   const uniforms = {
     uRes:   { value: new THREE.Vector2(1, 1) },
     uT:     { value: 0 },
-    uMouse: { value: new THREE.Vector2(0.5, 0.55) }
+    uMouse: { value: new THREE.Vector2(0.5, 0.55) },
+    uA:     { value: token('--silk-a') },   // fondo
+    uB:     { value: token('--silk-b') },   // pliegue
+    uC:     { value: token('--silk-c') }    // brillo
   };
+
+  window.addEventListener('ml:tema', () => {
+    token('--silk-a', uniforms.uA.value);
+    token('--silk-b', uniforms.uB.value);
+    token('--silk-c', uniforms.uC.value);
+  });
 
   const mat = new THREE.ShaderMaterial({
     uniforms,
@@ -39,6 +60,9 @@ function silk () {
       uniform vec2  uRes;
       uniform float uT;
       uniform vec2  uMouse;
+      uniform vec3  uA;
+      uniform vec3  uB;
+      uniform vec3  uC;
 
       float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
 
@@ -67,17 +91,13 @@ function silk () {
                       fbm(p * 1.5 + vec2(5.2, 1.3) - t));
         float f = fbm(p * 1.8 + 2.6 * q + vec2(t * 0.4, 0.0));
 
-        vec3 wine = vec3(0.078, 0.028, 0.056);
-        vec3 burg = vec3(0.290, 0.055, 0.133);
-        vec3 nac  = vec3(0.910, 0.784, 0.753);
-
-        vec3 col = mix(wine, burg, smoothstep(0.26, 0.95, f));
-        col = mix(col, nac, smoothstep(0.74, 1.06, f) * 0.20);
+        vec3 col = mix(uA, uB, smoothstep(0.26, 0.95, f));
+        col = mix(col, uC, smoothstep(0.74, 1.06, f) * 0.20);
 
         // bloom bajo el cursor
         float d = distance(p, vec2(uMouse.x * ar, uMouse.y));
-        col += nac  * 0.060 * exp(-d * 2.8);
-        col += burg * 0.200 * exp(-d * 1.5);
+        col += uC * 0.060 * exp(-d * 2.8);
+        col += uB * 0.200 * exp(-d * 1.5);
 
         // viñeta
         float v = smoothstep(1.30, 0.22, distance(uv, vec2(0.5)));
@@ -186,6 +206,7 @@ async function drum () {
     uniform float uHot;
     uniform float uAr;       // proporción del plano
     uniform float uImgAr;    // proporción de la imagen
+    uniform vec3  uTint;     // tinte de los planos del fondo
     varying vec2 vUv;
 
     void main(){
@@ -197,8 +218,7 @@ async function drum () {
 
       vec3 c = texture2D(uTex, uv).rgb;
 
-      vec3 wine = vec3(0.102, 0.033, 0.065);
-      c = mix(c, wine, uDim * 0.78);
+      c = mix(c, uTint, uDim * 0.78);
       c *= mix(1.0, 0.46, uDim);
       c += vec3(0.07, 0.035, 0.035) * uHot;
 
@@ -218,6 +238,10 @@ async function drum () {
   const geo = new THREE.PlaneGeometry(PW, PH, 1, 1);
   const meshes = [];
 
+  // un solo Vector3 compartido por los 16 materiales: al mutarlo cambian todos
+  const tint = token('--drum-tint');
+  window.addEventListener('ml:tema', () => token('--drum-tint', tint));
+
   for (let i = 0; i < N; i++) {
     const src = loaded[i % loaded.length];
 
@@ -227,7 +251,8 @@ async function drum () {
         uDim:   { value: 0 },
         uHot:   { value: 0 },
         uAr:    { value: PW / PH },
-        uImgAr: { value: src.ar }
+        uImgAr: { value: src.ar },
+        uTint:  { value: tint }
       },
       vertexShader: vert,
       fragmentShader: frag,

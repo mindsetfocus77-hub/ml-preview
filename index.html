@@ -19,8 +19,16 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@missLith_domina">
 
-<meta name="theme-color" content="#1A0810">
+<meta name="theme-color" content="#07070B">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+<!-- el tema se aplica antes de pintar para que no haya destello de color -->
+<script>
+  try {
+    var t = localStorage.getItem('ml-tema');
+    if (t) document.documentElement.dataset.tema = t;
+  } catch (e) {}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -512,6 +520,21 @@
     </div>
   </div>
 </footer>
+
+
+<!-- ─────────────────── SELECTOR DE PALETAS (demo) ───────────────────
+     Para probar colores en vivo. Al cerrar la paleta definitiva se borra
+     este bloque, su CSS y el bloque "Tema" de main.js.               -->
+<div class="tsw" id="tsw">
+  <span class="tsw__l">Paleta</span>
+  <div class="tsw__r">
+    <button type="button" data-t="cromo"      aria-label="Cromo"      title="Cromo — negro, acero y hielo"></button>
+    <button type="button" data-t="carbon"     aria-label="Carbón"     title="Carbón — monocromo, negro y hueso"></button>
+    <button type="button" data-t="medianoche" aria-label="Medianoche" title="Medianoche — índigo y azul hielo"></button>
+    <button type="button" data-t="violeta"    aria-label="Violeta"    title="Violeta — tinta violeta y neón"></button>
+    <button type="button" data-t="borgona"    aria-label="Borgoña"    title="Borgoña — la versión anterior"></button>
+  </div>
+</div>
 
 
 <!-- ───────────────────────────── LIGHTBOX ───────────────────────── -->

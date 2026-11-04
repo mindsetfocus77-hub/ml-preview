@@ -237,6 +237,35 @@
       + '&body='    + encodeURIComponent(body);
   });
 
+  /* ── Tema (demo) ──────────────────────────────────────────────────────
+     Bloque de la herramienta de paletas. Se borra entero al cerrar color. */
+  var tsw = $('#tsw');
+
+  if (tsw) {
+    var swatches = $$('button', tsw);
+    var meta = $('meta[name=theme-color]');
+
+    var mark = function (t) {
+      swatches.forEach(function (b) { b.classList.toggle('on', b.dataset.t === t); });
+    };
+
+    mark(document.documentElement.dataset.tema || 'cromo');
+
+    swatches.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var t = b.dataset.t;
+        document.documentElement.dataset.tema = t;
+        try { localStorage.setItem('ml-tema', t); } catch (e) {}
+        mark(t);
+        if (meta) {
+          meta.content = getComputedStyle(document.documentElement)
+            .getPropertyValue('--bg').trim();
+        }
+        window.dispatchEvent(new CustomEvent('ml:tema', { detail: t }));
+      });
+    });
+  }
+
   /* ── Año ──────────────────────────────────────────────────────────── */
   $('#yr').textContent = new Date().getFullYear();
 
