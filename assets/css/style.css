@@ -18,12 +18,30 @@
   --line-s: rgb(var(--txt-rgb) / .09);
 }
 
-/* ── 1 · Cromo — negro, acero y hielo ─────────────────────────────────── */
+/* ── 1 · Rojo — negro y rojo látex ────────────────────────────────────
+   Rojo saturado de verdad, no el vino de antes. Es la única paleta con el
+   acento oscuro, así que el texto que va encima suyo (--on-ac) es claro. */
 :root,
+html[data-tema="rojo"]{
+  --bg:#0A0507;  --bg-2:#120809;  --bg-3:#1C0C0F;
+  --deep:#4A060E; --deep-hi:#8E0D18;
+  --ac:#E8323C;  --ac-hi:#FF6E74; --ac-2:#A50C16; --on-ac:#FFF2F2;
+  --txt:#F6E9E9; --muted:#A58185; --faint:#73545A;
+
+  --bg-rgb:10 5 7;        --bg2-rgb:18 8 9;     --bg3-rgb:28 12 15;
+  --deep-rgb:74 6 14;     --deep-hi-rgb:142 13 24;
+  --ac-rgb:232 50 60;     --txt-rgb:246 233 233; --scrim-rgb:10 5 7;
+
+  /* el fondo se queda casi negro: el rojo vivo lo lleva el acento, no la seda */
+  --silk-a:#080405; --silk-b:#40060D; --silk-c:#C8444C;
+  --drum-tint:#140608;
+}
+
+/* ── 2 · Cromo — negro, acero y hielo ─────────────────────────────────── */
 html[data-tema="cromo"]{
   --bg:#07070B;  --bg-2:#0D0D13;  --bg-3:#15151E;
   --deep:#1E2A3D; --deep-hi:#2F4668;
-  --ac:#AEB7C4;  --ac-hi:#EDF2F8; --ac-2:#7C8798;
+  --ac:#AEB7C4;  --ac-hi:#EDF2F8; --ac-2:#7C8798; --on-ac:var(--bg);
   --txt:#ECEFF4; --muted:#8A909C; --faint:#5C626E;
 
   --bg-rgb:7 7 11;        --bg2-rgb:13 13 19;   --bg3-rgb:21 21 30;
@@ -34,11 +52,11 @@ html[data-tema="cromo"]{
   --drum-tint:#0C0F16;
 }
 
-/* ── 2 · Carbón — monocromo, negro y hueso ────────────────────────────── */
+/* ── 3 · Carbón — monocromo, negro y hueso ────────────────────────────── */
 html[data-tema="carbon"]{
   --bg:#060606;  --bg-2:#0C0C0C;  --bg-3:#141414;
   --deep:#1E1E1E; --deep-hi:#2C2C2C;
-  --ac:#D8D4CC;  --ac-hi:#F4F1EB; --ac-2:#A8A49C;
+  --ac:#D8D4CC;  --ac-hi:#F4F1EB; --ac-2:#A8A49C; --on-ac:var(--bg);
   --txt:#EFEDE8; --muted:#8C8882; --faint:#5E5A55;
 
   --bg-rgb:6 6 6;         --bg2-rgb:12 12 12;   --bg3-rgb:20 20 20;
@@ -49,11 +67,11 @@ html[data-tema="carbon"]{
   --drum-tint:#0A0A0A;
 }
 
-/* ── 3 · Medianoche — índigo profundo y azul hielo ────────────────────── */
+/* ── 4 · Medianoche — índigo profundo y azul hielo ────────────────────── */
 html[data-tema="medianoche"]{
   --bg:#060A18;  --bg-2:#0B1226;  --bg-3:#121B35;
   --deep:#16265C; --deep-hi:#223A86;
-  --ac:#9FB6E8;  --ac-hi:#E4EDFF; --ac-2:#6E87C4;
+  --ac:#9FB6E8;  --ac-hi:#E4EDFF; --ac-2:#6E87C4; --on-ac:var(--bg);
   --txt:#E8EEFA; --muted:#8A95B0; --faint:#5B6480;
 
   --bg-rgb:6 10 24;       --bg2-rgb:11 18 38;   --bg3-rgb:18 27 53;
@@ -64,11 +82,11 @@ html[data-tema="medianoche"]{
   --drum-tint:#0A1024;
 }
 
-/* ── 4 · Violeta — tinta violeta y neón ───────────────────────────────── */
+/* ── 5 · Violeta — tinta violeta y neón ───────────────────────────────── */
 html[data-tema="violeta"]{
   --bg:#0A0618;  --bg-2:#100A26;  --bg-3:#181038;
   --deep:#2E1070; --deep-hi:#4A1AA8;
-  --ac:#C9A6FF;  --ac-hi:#EFE2FF; --ac-2:#00E5FF;
+  --ac:#C9A6FF;  --ac-hi:#EFE2FF; --ac-2:#00E5FF; --on-ac:var(--bg);
   --txt:#EEE8FA; --muted:#948BB4; --faint:#635B82;
 
   --bg-rgb:10 6 24;       --bg2-rgb:16 10 38;   --bg3-rgb:24 16 56;
@@ -79,11 +97,11 @@ html[data-tema="violeta"]{
   --drum-tint:#0E0824;
 }
 
-/* ── 5 · Borgoña — la versión anterior ────────────────────────────────── */
+/* ── 6 · Borgoña — la versión anterior ────────────────────────────────── */
 html[data-tema="borgona"]{
   --bg:#1A0810;  --bg-2:#230C17;  --bg-3:#2F1020;
   --deep:#4A0E22; --deep-hi:#6E1532;
-  --ac:#E8C8C0;  --ac-hi:#F8E8E2; --ac-2:#D9B8A4;
+  --ac:#E8C8C0;  --ac-hi:#F8E8E2; --ac-2:#D9B8A4; --on-ac:var(--bg);
   --txt:#F5E9E4; --muted:#A88E8C; --faint:#7A6366;
 
   --bg-rgb:26 8 16;       --bg2-rgb:35 12 23;   --bg3-rgb:47 16 32;
@@ -121,7 +139,7 @@ body{
 img{ max-width:100%; height:auto; display:block; }
 a{ color:inherit; text-decoration:none; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
-::selection{ background:var(--ac); color:var(--bg); }
+::selection{ background:var(--ac); color:var(--on-ac); }
 :focus-visible{ outline:1px solid var(--ac); outline-offset:4px; }
 
 .w{ width:100%; max-width:var(--w); margin-inline:auto; padding-inline:var(--pad); }
@@ -227,14 +245,14 @@ main, .ft{ position:relative; z-index:2; }
 
 .btn--fill{
   background:linear-gradient(135deg, var(--ac-hi), var(--ac) 55%, var(--ac-2));
-  color:var(--bg);
+  color:var(--on-ac);
 }
 .btn--fill::before{ background:linear-gradient(135deg, var(--deep-hi), var(--deep)); }
 .btn--fill:hover{ color:var(--ac-hi); }
 
 .btn--line{ border-color:var(--line); color:var(--txt); }
 .btn--line::before{ background:var(--ac); }
-.btn--line:hover{ color:var(--bg); border-color:var(--ac); }
+.btn--line:hover{ color:var(--on-ac); border-color:var(--ac); }
 
 .btn--sm{ padding:.85em 1.8em; font-size:.63rem; }
 .btn--full{ width:100%; }
@@ -500,7 +518,7 @@ main, .ft{ position:relative; z-index:2; }
 }
 .ch i{ font-style:normal; font-size:.54rem; opacity:.55; }
 .ch:hover{ color:var(--txt); border-color:var(--line); }
-.ch.on{ background:var(--ac); border-color:var(--ac); color:var(--bg); }
+.ch.on{ background:var(--ac); border-color:var(--ac); color:var(--on-ac); }
 
 .sch{
   display:flex; align-items:center; gap:10px; min-width:210px;
@@ -765,7 +783,7 @@ main, .ft{ position:relative; z-index:2; }
   width:54px; height:54px; border-radius:50%; font-size:1.9rem; line-height:1; color:var(--muted);
   border:1px solid var(--line-s); transition:.3s;
 }
-.lb__x:hover, .lb__a:hover{ color:var(--bg); background:var(--ac); border-color:var(--ac); }
+.lb__x:hover, .lb__a:hover{ color:var(--on-ac); background:var(--ac); border-color:var(--ac); }
 .lb__a--p{ left:clamp(10px,2.5vw,30px); }
 .lb__a--n{ right:clamp(10px,2.5vw,30px); }
 .lb__c{
@@ -798,6 +816,7 @@ main, .ft{ position:relative; z-index:2; }
 .tsw__r button:hover{ transform:scale(1.2); }
 .tsw__r button.on{ border-color:var(--ac); box-shadow:0 0 0 3px rgb(var(--ac-rgb) / .22); }
 
+.tsw [data-t="rojo"]      { --a:#0A0507; --b:#E8323C; }
 .tsw [data-t="cromo"]     { --a:#07070B; --b:#AEB7C4; }
 .tsw [data-t="carbon"]    { --a:#060606; --b:#D8D4CC; }
 .tsw [data-t="medianoche"]{ --a:#060A18; --b:#9FB6E8; }

@@ -249,7 +249,7 @@
       swatches.forEach(function (b) { b.classList.toggle('on', b.dataset.t === t); });
     };
 
-    mark(document.documentElement.dataset.tema || 'cromo');
+    mark(document.documentElement.dataset.tema || 'rojo');
 
     swatches.forEach(function (b) {
       b.addEventListener('click', function () {

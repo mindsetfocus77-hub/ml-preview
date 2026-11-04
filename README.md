@@ -31,11 +31,20 @@ abajo a la izquierda para verlas en vivo.
 
 | Tema | Idea | Fondo | Acento |
 |---|---|---|---|
-| `cromo` *(actual)* | negro, acero y hielo | `#07070B` | `#AEB7C4` |
+| `rojo` *(actual)* | negro y rojo látex | `#0A0507` | `#E8323C` |
+| `cromo` | negro, acero y hielo | `#07070B` | `#AEB7C4` |
 | `carbon` | monocromo, negro y hueso | `#060606` | `#D8D4CC` |
 | `medianoche` | índigo profundo y azul hielo | `#060A18` | `#9FB6E8` |
 | `violeta` | tinta violeta y neón | `#0A0618` | `#C9A6FF` |
 | `borgona` | la versión anterior | `#1A0810` | `#E8C8C0` |
+
+En `rojo` el fondo se queda casi negro a propósito: el rojo vivo lo lleva el
+acento (titulares, botones, filetes). Subir también el rojo del shader de
+fondo convierte la página en una neblina roja que se come las fotos.
+
+Es además la única paleta con el acento oscuro, así que el texto que va
+encima del acento usa su propio token (`--on-ac`, blanco roto) en vez del
+color de fondo como en las demás.
 
 ### Cómo funciona
 
